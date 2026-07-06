@@ -2,7 +2,12 @@ import path from 'path';
 
 let db: any;
 
-const connectionString = process.env.DATABASE_URL;
+let rawConnectionString = process.env.DATABASE_URL || process.env.POSTGRES_URL || process.env.POSTGRES_URL_NON_POOLING;
+if (rawConnectionString) {
+  // Clean surrounding quotes and trailing whitespaces
+  rawConnectionString = rawConnectionString.trim().replace(/^["']|["']$/g, '');
+}
+const connectionString = rawConnectionString;
 
 // Helper to translate queries from SQLite to PostgreSQL
 function translateQuery(sqlString: string): string {
