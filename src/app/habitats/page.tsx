@@ -1,10 +1,10 @@
 import { db } from '@/lib/db';
 import Link from 'next/link';
 
-export default async function Home() {
+export default async function HabitatsPage() {
   const tanks = await db.prepare('SELECT * FROM Tank ORDER BY setupDate DESC').all() as any[];
 
-  // Retrieve statistics for each tank
+  // Retrieve statistics for the tanks
   for (const tank of tanks) {
     // Count fauna (FishProfile)
     const fishCount = await db.prepare('SELECT SUM(quantity) as count FROM FishProfile WHERE tankId = ?').get(tank.id) as any;
@@ -30,7 +30,6 @@ export default async function Home() {
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
-      
       {/* Desktop View Header Area (visible on desktop only) */}
       <div className="desktop-only" style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         <header style={{ 
@@ -113,7 +112,7 @@ export default async function Home() {
           </div>
           
           <Link href="/tanks/new" className="btn btn-primary" style={{ padding: '0.6rem 1.25rem' }}>
-            + Add New Tank
+            + Add New Habitat
           </Link>
           
           <style dangerouslySetInnerHTML={{ __html: `
@@ -127,15 +126,15 @@ export default async function Home() {
         {/* Overview Stats */}
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1.5rem', marginBottom: '1rem' }}>
           <div className="card" style={{ padding: '1.25rem' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Active Habitats</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Total Ecosystems</span>
             <div style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--tertiary)', marginTop: '0.25rem' }}>{tanks.length}</div>
           </div>
           <div className="card" style={{ padding: '1.25rem' }}>
             <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Total Water Volume</span>
-            <div style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--primary)', marginTop: '0.25rem' }}>{totalVolume} Liters</div>
+            <div style={{ fontSize: '2rem', fontWeight: 600, color: 'var(--primary)', marginTop: '0.25rem' }}>{totalVolume} L</div>
           </div>
           <div className="card" style={{ padding: '1.25rem' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Ecosystem Stability Index</span>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', textTransform: 'uppercase', fontWeight: 600 }}>Average Ecosystem Stability</span>
             <div style={{ fontSize: '2rem', fontWeight: 600, color: '#10b981', marginTop: '0.25rem' }}>{avgHealth}%</div>
           </div>
         </div>
@@ -274,15 +273,13 @@ export default async function Home() {
         </div>
       </div>
 
-      {/* Grid List */}
+      {/* Habitats Grid */}
       {tanks.length === 0 ? (
         <div className="card" style={{ padding: '4rem', textAlign: 'center', borderStyle: 'dashed' }}>
           <div style={{ fontSize: '3rem', marginBottom: '1rem' }}>🐠</div>
-          <h2 className="heading-2" style={{ marginBottom: '0.5rem' }}>No Aquarium Tanks Found</h2>
-          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem', maxWidth: '400px', margin: '0 auto 1.5rem' }}>
-            Get started by logging your first aquarium setup.
-          </p>
-          <Link href="/tanks/new" className="btn btn-primary">Create Tank</Link>
+          <h2 className="heading-2" style={{ marginBottom: '0.5rem' }}>No Habitats Logged</h2>
+          <p style={{ color: 'var(--text-secondary)', marginBottom: '1.5rem' }}>Start by creating your first aquarium habitat to monitor water parameters, flora, and fauna.</p>
+          <Link href="/tanks/new" className="btn btn-primary">Add Habitat</Link>
         </div>
       ) : (
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '2rem' }}>
