@@ -33,10 +33,32 @@ if (connectionString) {
   // PostgreSQL Mode (Vercel Production / Supabase Integration)
   const postgres = require('postgres');
   
-  // Set SSL configuration for Supabase / Neon connection poolers
-  const sql = postgres(connectionString, {
-    ssl: { rejectUnauthorized: false }
-  });
+  let sql: any;
+  try {
+    // Parse connection string manually to bypass connection pooler URL formatting quirks
+    const url = new URL(connectionString);
+    const username = decodeURIComponent(url.username);
+    const password = decodeURIComponent(url.password);
+    const host = url.hostname;
+    const port = parseInt(url.port || '5432');
+    const database = decodeURIComponent(url.pathname.replace(/^\//, ''));
+
+    sql = postgres({
+      host,
+      port,
+      database,
+      username,
+      password,
+      ssl: { rejectUnauthorized: false },
+      prepare: false // CRITICAL: Disable prepared statements for pgBouncer / Supavisor transaction mode compatibility
+    });
+  } catch (err) {
+    // Fallback to direct string connection if parsing fails
+    sql = postgres(connectionString, {
+      ssl: { rejectUnauthorized: false },
+      prepare: false
+    });
+  }
 
   db = {
     async exec(sqlString: string) {
