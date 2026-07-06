@@ -57,7 +57,7 @@ export default async function HabitatsPage() {
           }}>
             👩‍🎨
           </div>
-          <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--tertiary)' }}>AuraAquatics</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--tertiary)' }}>Finbo</span>
         </div>
         
         <Link href="/notifications" style={{ textDecoration: 'none' }}>

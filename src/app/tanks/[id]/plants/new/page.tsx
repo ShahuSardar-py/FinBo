@@ -2,45 +2,44 @@ import { addPlant } from '@/app/actions/plantActions';
 import Link from 'next/link';
 import { db } from '@/lib/db';
 import { notFound } from 'next/navigation';
+import { FormHeader, FormBanner, formStyles } from '@/components/FormStyles';
 
-export default async function AddPlant({ params }: { params: { id: string } }) {
-  const tank = await db.prepare('SELECT * FROM Tank WHERE id = ?').get(params.id) as any;
+export default async function AddPlant({ params }: { params: Promise<{ id: string }> }) {
+  const resolvedParams = await params;
+  const tank = await db.prepare('SELECT * FROM Tank WHERE id = ?').get(resolvedParams.id) as any;
   if (!tank) return notFound();
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto', width: '100%' }}>
-      <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <Link href={`/tanks/${tank.id}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none' }}>
-          ← Back to {tank.name}
-        </Link>
-        <h1 className="heading-1" style={{ margin: 0 }}>Add Plants / Flora</h1>
-      </div>
+    <div style={formStyles.container}>
+      {/* Form Header */}
+      <FormHeader 
+        title="Add Plants / Flora" 
+        subtitle={`Introduce aquatic plants and flora to ${tank.name}.`} 
+        backUrl={`/tanks/${tank.id}`} 
+      />
 
-      <div className="card">
-        <form action={addPlant} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+      {/* Thick Border Form Card */}
+      <div style={formStyles.card}>
+        <form action={addPlant} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <input type="hidden" name="tankId" value={tank.id} />
           
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="species" style={{ fontWeight: 500, fontSize: '0.875rem' }}>Plant Species *</label>
+          {/* Plant Species */}
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="species" style={formStyles.label}>Plant Species *</label>
             <input 
               type="text" 
               id="species" 
               name="species" 
               required 
               placeholder="e.g. Anubias Nana, Java Moss, Rotala"
-              style={{
-                padding: '0.75rem',
-                border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-sm)',
-                fontFamily: 'inherit',
-                outline: 'none',
-              }}
+              style={formStyles.input}
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label htmlFor="quantity" style={{ fontWeight: 500, fontSize: '0.875rem' }}>Quantity *</label>
+          {/* Qty & Price Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="quantity" style={formStyles.label}>Quantity *</label>
               <input 
                 type="number" 
                 id="quantity" 
@@ -48,18 +47,12 @@ export default async function AddPlant({ params }: { params: { id: string } }) {
                 required 
                 min="1"
                 defaultValue="1"
-                style={{
-                  padding: '0.75rem',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                }}
+                style={formStyles.input}
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <label htmlFor="price" style={{ fontWeight: 500, fontSize: '0.875rem' }}>Price (Optional)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="price" style={formStyles.label}>Price Paid (Optional)</label>
               <input 
                 type="number" 
                 id="price" 
@@ -67,63 +60,52 @@ export default async function AddPlant({ params }: { params: { id: string } }) {
                 step="0.01"
                 min="0"
                 placeholder="e.g. 5.99"
-                style={{
-                  padding: '0.75rem',
-                  border: '1px solid var(--border-color)',
-                  borderRadius: 'var(--radius-sm)',
-                  fontFamily: 'inherit',
-                  outline: 'none',
-                }}
+                style={formStyles.input}
               />
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="boughtFrom" style={{ fontWeight: 500, fontSize: '0.875rem' }}>Bought From (Optional)</label>
+          {/* Vendor Source */}
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="boughtFrom" style={formStyles.label}>Bought From (Optional)</label>
             <input 
               type="text" 
               id="boughtFrom" 
               name="boughtFrom" 
               placeholder="e.g. Tropica, Local Fish Store"
-              style={{
-                padding: '0.75rem',
-                border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-sm)',
-                fontFamily: 'inherit',
-                outline: 'none',
-              }}
+              style={formStyles.input}
             />
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-            <label htmlFor="addedDate" style={{ fontWeight: 500, fontSize: '0.875rem' }}>Date Added *</label>
+          {/* Date Added */}
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="addedDate" style={formStyles.label}>Date Added *</label>
             <input 
               type="date" 
               id="addedDate" 
               name="addedDate" 
               required
               defaultValue={new Date().toISOString().split('T')[0]}
-              style={{
-                padding: '0.75rem',
-                border: '1px solid var(--border-color)',
-                borderRadius: 'var(--radius-sm)',
-                fontFamily: 'inherit',
-                outline: 'none',
-              }}
+              style={formStyles.input}
             />
           </div>
 
-          <div style={{ marginTop: '1rem', paddingTop: '1.5rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '1rem' }}>
-            <Link href={`/tanks/${tank.id}`} className="btn">
-              Cancel
-            </Link>
-            <button type="submit" className="btn btn-primary">
+          {/* Actions */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
+            <button type="submit" style={formStyles.submitBtn}>
               Save Plants
             </button>
+            <Link href={`/tanks/${tank.id}`} style={{ textDecoration: 'none' }}>
+              <div style={formStyles.cancelBtn}>
+                Cancel
+              </div>
+            </Link>
           </div>
 
         </form>
       </div>
+
+      <FormBanner />
     </div>
   );
 }

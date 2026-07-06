@@ -17,166 +17,211 @@ export default async function ChemistryPage() {
     
     switch (param) {
       case 'ammonia':
-        if (value === 0) return { text: 'Ideal (0.0)', color: '#10b981', bg: '#ecfdf5' };
-        if (value <= 0.25) return { text: 'Warning', color: '#f59e0b', bg: '#fffbeb' };
-        return { text: 'Toxic!', color: '#ef4444', bg: '#fef2f2' };
+        if (value === 0) return { text: 'Ideal', color: '#166534', bg: '#dcfce7' };
+        if (value <= 0.25) return { text: 'Warning', color: '#854d0e', bg: '#fef9c3' };
+        return { text: 'Toxic!', color: '#991b1b', bg: '#fee2e2' };
       case 'nitrite':
-        if (value === 0) return { text: 'Ideal (0.0)', color: '#10b981', bg: '#ecfdf5' };
-        if (value <= 0.25) return { text: 'Warning', color: '#f59e0b', bg: '#fffbeb' };
-        return { text: 'Toxic!', color: '#ef4444', bg: '#fef2f2' };
+        if (value === 0) return { text: 'Ideal', color: '#166534', bg: '#dcfce7' };
+        if (value <= 0.25) return { text: 'Warning', color: '#854d0e', bg: '#fef9c3' };
+        return { text: 'Toxic!', color: '#991b1b', bg: '#fee2e2' };
       case 'nitrate':
-        if (value <= 10) return { text: 'Optimal', color: '#10b981', bg: '#ecfdf5' };
-        if (value <= 25) return { text: 'Acceptable', color: '#3b82f6', bg: '#eff6ff' };
-        if (value <= 40) return { text: 'Warning', color: '#f59e0b', bg: '#fffbeb' };
-        return { text: 'Dangerous!', color: '#ef4444', bg: '#fef2f2' };
+        if (value <= 10) return { text: 'Optimal', color: '#166534', bg: '#dcfce7' };
+        if (value <= 25) return { text: 'Normal', color: '#1e40af', bg: '#dbeafe' };
+        if (value <= 40) return { text: 'Warning', color: '#854d0e', bg: '#fef9c3' };
+        return { text: 'Danger!', color: '#991b1b', bg: '#fee2e2' };
       case 'ph':
-        if (value >= 6.5 && value <= 7.5) return { text: 'Neutral', color: '#10b981', bg: '#ecfdf5' };
-        if (value >= 6.0 && value <= 8.2) return { text: 'Acceptable', color: '#3b82f6', bg: '#eff6ff' };
-        return { text: 'Out of Range', color: '#ef4444', bg: '#fef2f2' };
+        if (value >= 6.5 && value <= 7.5) return { text: 'Neutral', color: '#166534', bg: '#dcfce7' };
+        if (value >= 6.0 && value <= 8.2) return { text: 'Stable', color: '#1e40af', bg: '#dbeafe' };
+        return { text: 'Alert', color: '#991b1b', bg: '#fee2e2' };
       default:
         return { text: 'Logged', color: '#64748b', bg: '#f1f5f9' };
     }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+    <div style={{
+      maxWidth: '480px',
+      margin: '0 auto',
+      padding: '1rem 0 6rem 0',
+      display: 'flex',
+      flexDirection: 'column',
+      gap: '1.5rem'
+    }}>
       
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <h1 className="heading-1">Water Chemistry logs</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>Track biological parameters, hardness levels, and temperature cycles.</p>
-        </div>
+      <header>
+        <h1 className="heading-1" style={{ fontSize: '1.8rem', fontWeight: 800, color: '#0f172a', letterSpacing: '-0.02em', margin: '0 0 0.25rem 0' }}>
+          Chemistry Analyzer
+        </h1>
+        <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem' }}>Track biological parameters, hardness levels, and temperature cycles.</p>
       </header>
 
-      {/* Grid of tanks shortcuts to log */}
-      <section className="card">
-        <h2 className="heading-2" style={{ marginBottom: '1rem' }}>Log New Measurements</h2>
+      {/* Log shortcuts */}
+      <section style={{
+        background: '#ffffff',
+        border: '1.5px solid rgba(15, 23, 42, 0.06)',
+        borderRadius: '30px',
+        padding: '1.5rem 1.25rem',
+        boxShadow: '0 12px 24px rgba(15, 23, 42, 0.02)'
+      }}>
+        <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.75rem 0', letterSpacing: '-0.01em', textTransform: 'uppercase' }}>
+          Log New Measurements
+        </h2>
         {tanks.length === 0 ? (
-          <p style={{ color: 'var(--text-secondary)' }}>Please add a tank before logging parameters.</p>
+          <p style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>Please add a tank before logging parameters.</p>
         ) : (
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '1rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
             {tanks.map(tank => (
               <Link 
                 href={`/tanks/${tank.id}/chemistry/new`} 
                 key={tank.id} 
-                className="btn btn-primary"
-                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+                style={{
+                  background: '#005b60',
+                  color: '#ffffff',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '20px',
+                  fontSize: '0.75rem',
+                  fontWeight: 700,
+                  textDecoration: 'none',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  boxShadow: '0 4px 10px rgba(0, 91, 96, 0.15)'
+                }}
               >
-                🧪 Log for {tank.name}
+                <span>🧪</span>
+                <span>{tank.name}</span>
               </Link>
             ))}
           </div>
         )}
       </section>
 
-      {/* Param status chart explanation */}
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
-        
-        {/* Table of logs */}
-        <section className="card" style={{ overflowX: 'auto', padding: '1.5rem 0' }}>
-          <div style={{ padding: '0 1.5rem', marginBottom: '1.5rem' }}>
-            <h2 className="heading-2" style={{ margin: 0 }}>Recent Water Parameter Logs</h2>
-            <p style={{ color: 'var(--text-secondary)', fontSize: '0.875rem', marginTop: '0.25rem' }}>Showing last 30 readings across all enclosures.</p>
+      {/* Parameter Logs List */}
+      <section style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+        <h2 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.25rem 0', letterSpacing: '-0.01em', textTransform: 'uppercase' }}>
+          Historical Telemetry
+        </h2>
+
+        {logs.length === 0 ? (
+          <div style={{
+            background: '#ffffff',
+            borderRadius: '30px',
+            padding: '3rem 1.5rem',
+            textAlign: 'center',
+            color: 'var(--text-secondary)',
+            fontSize: '0.85rem',
+            border: '1.5px solid rgba(15, 23, 42, 0.06)'
+          }}>
+            No water parameters logged yet. Select a tank above to record measurements.
           </div>
+        ) : (
+          logs.map((log) => {
+            const ammoniaStatus = getStatus('ammonia', log.ammonia);
+            const nitriteStatus = getStatus('nitrite', log.nitrite);
+            const nitrateStatus = getStatus('nitrate', log.nitrate);
+            const phStatus = getStatus('ph', log.ph);
 
-          {logs.length === 0 ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--text-secondary)' }}>
-              No water parameters logged yet. Select a tank above to log your first parameter.
-            </div>
-          ) : (
-            <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', minWidth: '700px' }}>
-              <thead>
-                <tr style={{ borderBottom: '1px solid var(--border-color)', color: 'var(--text-secondary)', fontSize: '0.75rem', fontWeight: 600, textTransform: 'uppercase' }}>
-                  <th style={{ padding: '1rem 1.5rem' }}>Habitat</th>
-                  <th style={{ padding: '1rem' }}>Date & Time</th>
-                  <th style={{ padding: '1rem' }}>Temp</th>
-                  <th style={{ padding: '1rem' }}>pH</th>
-                  <th style={{ padding: '1rem' }}>Ammonia</th>
-                  <th style={{ padding: '1rem' }}>Nitrite</th>
-                  <th style={{ padding: '1rem' }}>Nitrate</th>
-                  <th style={{ padding: '1rem' }}>GH / KH</th>
-                </tr>
-              </thead>
-              <tbody>
-                {logs.map((log) => {
-                  const ammoniaStatus = getStatus('ammonia', log.ammonia);
-                  const nitriteStatus = getStatus('nitrite', log.nitrite);
-                  const nitrateStatus = getStatus('nitrate', log.nitrate);
-                  const phStatus = getStatus('ph', log.ph);
+            return (
+              <div key={log.id} style={{
+                background: '#ffffff',
+                border: '1.5px solid rgba(15, 23, 42, 0.06)',
+                borderRadius: '28px',
+                padding: '1.25rem 1.5rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+                boxShadow: '0 4px 12px rgba(15, 23, 42, 0.01)'
+              }}>
+                {/* Header */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <Link href={`/tanks/${log.tankId}`} style={{
+                    fontSize: '0.9rem',
+                    fontWeight: 800,
+                    color: '#00838f',
+                    textDecoration: 'none'
+                  }}>
+                    {log.tankName}
+                  </Link>
+                  <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
+                    {new Date(log.timestamp).toLocaleDateString()} at {new Date(log.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                  </span>
+                </div>
 
-                  return (
-                    <tr key={log.id} style={{ borderBottom: '1px solid var(--border-color)', fontSize: '0.875rem', transition: 'background-color 0.2s' }}>
-                      <td style={{ padding: '1rem 1.5rem', fontWeight: 600 }}>
-                        <Link href={`/tanks/${log.tankId}`} style={{ color: 'var(--primary)', textDecoration: 'none' }}>
-                          {log.tankName}
-                        </Link>
-                      </td>
-                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
-                        {new Date(log.timestamp).toLocaleString()}
-                      </td>
-                      <td style={{ padding: '1rem', fontWeight: 500 }}>
-                        {log.temperature !== null ? `${log.temperature}°C` : '--'}
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        <span style={{ 
-                          color: phStatus.color, 
-                          background: phStatus.bg, 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '4px', 
-                          fontWeight: 600,
-                          fontSize: '0.8rem'
-                        }}>
-                          {log.ph !== null ? log.ph : '--'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        <span style={{ 
-                          color: ammoniaStatus.color, 
-                          background: ammoniaStatus.bg, 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '4px', 
-                          fontWeight: 600,
-                          fontSize: '0.8rem'
-                        }}>
-                          {log.ammonia !== null ? `${log.ammonia} ppm` : '--'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        <span style={{ 
-                          color: nitriteStatus.color, 
-                          background: nitriteStatus.bg, 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '4px', 
-                          fontWeight: 600,
-                          fontSize: '0.8rem'
-                        }}>
-                          {log.nitrite !== null ? `${log.nitrite} ppm` : '--'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '1rem' }}>
-                        <span style={{ 
-                          color: nitrateStatus.color, 
-                          background: nitrateStatus.bg, 
-                          padding: '0.25rem 0.5rem', 
-                          borderRadius: '4px', 
-                          fontWeight: 600,
-                          fontSize: '0.8rem'
-                        }}>
-                          {log.nitrate !== null ? `${log.nitrate} ppm` : '--'}
-                        </span>
-                      </td>
-                      <td style={{ padding: '1rem', color: 'var(--text-secondary)' }}>
-                        {log.gh !== null ? `${log.gh}°d` : '--'} / {log.kh !== null ? `${log.kh}°d` : '--'}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          )}
-        </section>
-      </div>
+                {/* Grid */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', fontSize: '0.8rem', color: '#0f172a' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '0.4rem 0.75rem', borderRadius: '12px' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Temperature</span>
+                    <span style={{ fontWeight: 700 }}>{log.temperature !== null ? `${log.temperature}°C` : '--'}</span>
+                  </div>
 
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '0.4rem 0.75rem', borderRadius: '12px' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>pH Level</span>
+                    <span style={{
+                      color: phStatus.color,
+                      background: phStatus.bg,
+                      padding: '0.05rem 0.4rem',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      fontSize: '0.75rem'
+                    }}>
+                      {log.ph !== null ? log.ph : '--'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '0.4rem 0.75rem', borderRadius: '12px' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Ammonia (NH3)</span>
+                    <span style={{
+                      color: ammoniaStatus.color,
+                      background: ammoniaStatus.bg,
+                      padding: '0.05rem 0.4rem',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      fontSize: '0.75rem'
+                    }}>
+                      {log.ammonia !== null ? `${log.ammonia} ppm` : '--'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '0.4rem 0.75rem', borderRadius: '12px' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Nitrite (NO2)</span>
+                    <span style={{
+                      color: nitriteStatus.color,
+                      background: nitriteStatus.bg,
+                      padding: '0.05rem 0.4rem',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      fontSize: '0.75rem'
+                    }}>
+                      {log.nitrite !== null ? `${log.nitrite} ppm` : '--'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '0.4rem 0.75rem', borderRadius: '12px' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Nitrate (NO3)</span>
+                    <span style={{
+                      color: nitrateStatus.color,
+                      background: nitrateStatus.bg,
+                      padding: '0.05rem 0.4rem',
+                      borderRadius: '8px',
+                      fontWeight: 700,
+                      fontSize: '0.75rem'
+                    }}>
+                      {log.nitrate !== null ? `${log.nitrate} ppm` : '--'}
+                    </span>
+                  </div>
+
+                  <div style={{ display: 'flex', justifyContent: 'space-between', background: '#f8fafc', padding: '0.4rem 0.75rem', borderRadius: '12px' }}>
+                    <span style={{ color: '#64748b', fontWeight: 600 }}>Hardness (GH/KH)</span>
+                    <span style={{ fontWeight: 700 }}>
+                      {log.gh !== null ? `${log.gh}°` : '--'}/{log.kh !== null ? `${log.kh}°` : '--'}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </section>
     </div>
   );
 }

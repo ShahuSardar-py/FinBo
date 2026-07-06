@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { addEquipment } from '@/app/actions/equipmentActions';
+import { FormHeader, FormBanner, formStyles } from './FormStyles';
 
 interface EquipmentFormProps {
   tankId: string;
@@ -10,14 +11,12 @@ interface EquipmentFormProps {
 }
 
 const COMMON_HARDWARE = [
-  { name: 'Canister Filter', icon: '⚙️', brand: 'Oase / Fluval' },
-  { name: 'Sump Filtration', icon: '🌀', brand: 'Custom Reef' },
-  { name: 'LED Aquarium Light', icon: '💡', brand: 'Twinstar / Radion' },
-  { name: 'Submersible Heater', icon: '🌡️', brand: 'Eheim / Oase' },
+  { name: 'Canister Filter', icon: '⚙️', brand: 'Oase' },
+  { name: 'Sump Filtration', icon: '🌀', brand: 'Custom' },
+  { name: 'LED Aquarium Light', icon: '💡', brand: 'Twinstar' },
+  { name: 'Submersible Heater', icon: '🌡️', brand: 'Eheim' },
   { name: 'CO2 Regulator System', icon: '🧪', brand: 'CO2Art' },
-  { name: 'Wavemaker Pump', icon: '🌊', brand: 'Nero / Ecotech' },
-  { name: 'Protein Skimmer', icon: '🧼', brand: 'Reef Octopus' },
-  { name: 'Auto Dosing Pump', icon: '🧪', brand: 'Kamoer' },
+  { name: 'Wavemaker Pump', icon: '🌊', brand: 'Nero' },
 ];
 
 export default function EquipmentForm({ tankId, tankName }: EquipmentFormProps) {
@@ -39,29 +38,36 @@ export default function EquipmentForm({ tankId, tankName }: EquipmentFormProps) 
 
   const handleSelectPreset = (preset: typeof COMMON_HARDWARE[0]) => {
     setName(preset.name);
-    // Suggest standard brands
-    const firstBrand = preset.brand.split(' / ')[0];
-    setCompany(firstBrand);
+    setCompany(preset.brand);
   };
 
   return (
-    <div style={{ maxWidth: '650px', margin: '0 auto', width: '100%' }}>
-      <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <Link href={`/tanks/${tankId}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
-          ← Back to {tankName}
-        </Link>
-        <h1 className="heading-1" style={{ margin: 0 }}>Add Equipment</h1>
-      </div>
+    <div style={formStyles.container}>
+      {/* Form Header */}
+      <FormHeader 
+        title="Add Equipment" 
+        subtitle={`Log new hardware, filtration, and lighting spec systems for ${tankName}.`} 
+        backUrl={`/tanks/${tankId}`} 
+      />
 
-      <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {/* Thick Border Form Card */}
+      <div style={formStyles.card}>
         
         {/* Helper Banner */}
-        <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', background: '#f8fafc', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-          <span style={{ fontSize: '2rem' }}>⚙️</span>
+        <div style={{
+          display: 'flex',
+          gap: '1.25rem',
+          alignItems: 'center',
+          background: '#f8fafc',
+          padding: '1.25rem',
+          borderRadius: '20px',
+          border: '3.5px solid #0f172a'
+        }}>
+          <span style={{ fontSize: '1.8rem' }}>⚙️</span>
           <div>
-            <h4 style={{ margin: 0, fontWeight: 600, color: 'var(--tertiary)' }}>Hardware Telemetry Logging</h4>
-            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              Log filters, heaters, CO2 and wave regulators to complete your aquarium's technical specs.
+            <h4 style={{ margin: 0, fontWeight: 800, color: '#0f172a', fontSize: '0.85rem' }}>Hardware Specifications</h4>
+            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.725rem', color: 'var(--text-secondary)', lineHeight: 1.3 }}>
+              Log filters, heaters, CO2 and wave regulators to complete your aquarium's technical specifications.
             </p>
           </div>
         </div>
@@ -71,8 +77,8 @@ export default function EquipmentForm({ tankId, tankName }: EquipmentFormProps) 
           <input type="hidden" name="tankId" value={tankId} />
 
           {/* Name with suggestions */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="name" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Equipment / Hardware Name *</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="name" style={formStyles.label}>Equipment / Hardware Name *</label>
             <input 
               type="text" 
               id="name" 
@@ -81,11 +87,12 @@ export default function EquipmentForm({ tankId, tankName }: EquipmentFormProps) 
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="e.g. BioMaster Thermo 350"
+              style={formStyles.input}
             />
             
             {/* Presets */}
-            <div style={{ marginTop: '0.5rem' }}>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
+            <div style={{ marginTop: '0.35rem' }}>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.35rem', fontWeight: 800, letterSpacing: '0.05em' }}>
                 QUICK SELECT CATEGORY:
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -95,18 +102,18 @@ export default function EquipmentForm({ tankId, tankName }: EquipmentFormProps) 
                     type="button"
                     onClick={() => handleSelectPreset(preset)}
                     style={{
-                      background: name === preset.name ? 'var(--secondary)' : '#ffffff',
-                      color: name === preset.name ? 'var(--primary)' : 'var(--text-secondary)',
-                      border: name === preset.name ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                      padding: '0.35rem 0.65rem',
-                      borderRadius: 'var(--radius-full)',
-                      fontSize: '0.75rem',
+                      background: name === preset.name ? '#e0f7fa' : '#ffffff',
+                      color: name === preset.name ? '#00838f' : '#64748b',
+                      border: '3.5px solid #0f172a',
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: '16px',
+                      fontSize: '0.725rem',
                       cursor: 'pointer',
-                      fontWeight: 500,
+                      fontWeight: 800,
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.25rem',
-                      transition: 'var(--transition-smooth)'
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     <span>{preset.icon}</span>
@@ -118,32 +125,34 @@ export default function EquipmentForm({ tankId, tankName }: EquipmentFormProps) 
           </div>
 
           {/* Manufacturer Brand */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="company" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Manufacturer / Brand (Optional)</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="company" style={formStyles.label}>Manufacturer / Brand (Optional)</label>
             <input 
               type="text" 
               id="company" 
               name="company" 
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              placeholder="e.g. Oase, Fluval, Ecotech Marine"
+              placeholder="e.g. Oase, Fluval, Ecotech"
+              style={formStyles.input}
             />
           </div>
 
-          {/* Shop Source & Purchase Cost */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="boughtFrom" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Vendor Store (Optional)</label>
+          {/* Vendor Source & Price */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="boughtFrom" style={formStyles.label}>Vendor Store (Optional)</label>
               <input 
                 type="text" 
                 id="boughtFrom" 
                 name="boughtFrom" 
                 placeholder="e.g. Amazon, Local Pet Store"
+                style={formStyles.input}
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="price" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Price Paid (Optional)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="price" style={formStyles.label}>Price Paid (Optional)</label>
               <input 
                 type="number" 
                 id="price" 
@@ -151,38 +160,47 @@ export default function EquipmentForm({ tankId, tankName }: EquipmentFormProps) 
                 step="0.01"
                 min="0"
                 placeholder="e.g. 249.99"
+                style={formStyles.input}
               />
             </div>
           </div>
 
           {/* Date Bought */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="boughtDate" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Purchase Date *</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="boughtDate" style={formStyles.label}>Purchase Date *</label>
             <input 
               type="date" 
               id="boughtDate" 
               name="boughtDate" 
               required
               defaultValue={new Date().toISOString().split('T')[0]}
+              style={formStyles.input}
             />
           </div>
 
-          {/* Submit controls */}
-          <div style={{ marginTop: '1rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-            <Link href={`/tanks/${tankId}`} className="btn">
-              Cancel
-            </Link>
+          {/* Action buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
             <button 
               type="submit" 
               disabled={isPending}
-              className="btn btn-primary"
-              style={{ opacity: isPending ? 0.7 : 1, cursor: isPending ? 'not-allowed' : 'pointer' }}
+              style={{
+                ...formStyles.submitBtn,
+                opacity: isPending ? 0.7 : 1,
+                cursor: isPending ? 'not-allowed' : 'pointer'
+              }}
             >
               {isPending ? 'Saving Hardware...' : 'Save Equipment'}
             </button>
+            <Link href={`/tanks/${tankId}`} style={{ textDecoration: 'none' }}>
+              <div style={formStyles.cancelBtn}>
+                Cancel
+              </div>
+            </Link>
           </div>
         </form>
       </div>
+
+      <FormBanner />
     </div>
   );
 }

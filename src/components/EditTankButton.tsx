@@ -17,17 +17,33 @@ interface Tank {
 
 interface EditTankButtonProps {
   tank: Tank;
+  variant?: 'standard' | 'icon';
 }
 
-export default function EditTankButton({ tank }: EditTankButtonProps) {
+export default function EditTankButton({ tank, variant = 'standard' }: EditTankButtonProps) {
   const [isOpen, setIsOpen] = useState(false);
+
+  const isIcon = variant === 'icon';
 
   return (
     <>
       <button 
         onClick={() => setIsOpen(true)} 
-        className="btn"
-        style={{
+        style={isIcon ? {
+          width: '38px',
+          height: '38px',
+          borderRadius: '50%',
+          background: '#ffffff',
+          border: '1px solid rgba(15, 23, 42, 0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1.1rem',
+          cursor: 'pointer',
+          boxShadow: '0 4px 10px rgba(15, 23, 42, 0.03)',
+          transition: 'transform 0.2s ease',
+          padding: 0
+        } : {
           background: 'var(--tertiary)',
           color: 'white',
           border: 'none',
@@ -39,10 +55,11 @@ export default function EditTankButton({ tank }: EditTankButtonProps) {
           display: 'flex',
           alignItems: 'center',
           gap: '0.5rem',
-          transition: 'var(--transition-smooth)'
+          transition: 'all 0.2s ease'
         }}
+        className="action-hover-btn"
       >
-        ⚙️ Edit Configuration
+        ⚙️ {!isIcon && 'Edit Configuration'}
       </button>
 
       <EditTankModal 

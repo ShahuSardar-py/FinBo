@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { addWaterLog } from '@/app/actions/chemistryActions';
+import { FormHeader, FormBanner, formStyles } from './FormStyles';
 
 interface ChemistryFormProps {
   tankId: string;
@@ -70,46 +71,53 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
   };
 
   return (
-    <div style={{ maxWidth: '650px', margin: '0 auto', width: '100%' }}>
-      <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <Link href={`/tanks/${tankId}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
-          ← Back to {tankName}
-        </Link>
-        <h1 className="heading-1" style={{ margin: 0 }}>Log Water Chemistry</h1>
-      </div>
+    <div style={formStyles.container}>
+      {/* Form Header */}
+      <FormHeader 
+        title="Log Water Chemistry" 
+        subtitle={`Record current telemetry and biological cycles for ${tankName}.`} 
+        backUrl={`/tanks/${tankId}`} 
+      />
 
-      <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {/* Thick Border Form Card */}
+      <div style={formStyles.card}>
         
         {/* Helper Banner */}
-        <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', background: '#f8fafc', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-          <span style={{ fontSize: '2rem' }}>🧪</span>
+        <div style={{
+          display: 'flex',
+          gap: '1.25rem',
+          alignItems: 'center',
+          background: '#f8fafc',
+          padding: '1.25rem',
+          borderRadius: '20px',
+          border: '3.5px solid #0f172a'
+        }}>
+          <span style={{ fontSize: '1.8rem' }}>🧪</span>
           <div>
-            <h4 style={{ margin: 0, fontWeight: 600, color: 'var(--tertiary)' }}>Chemistry Analyzer</h4>
-            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              Log water test parameters. Input box guides highlight corresponding liquid test kit colors.
+            <h4 style={{ margin: 0, fontWeight: 800, color: '#0f172a', fontSize: '0.85rem' }}>Chemistry Analyzer</h4>
+            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.725rem', color: 'var(--text-secondary)', lineHeight: 1.3 }}>
+              Input water parameters below. Dot indicators mimic liquid test kit color reactions.
             </p>
           </div>
         </div>
 
         {/* Form */}
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <input type="hidden" name="tankId" value={tankId} />
 
-          {/* pH & Temperature */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-            
-            {/* pH field */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="ph" style={{ fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+          {/* pH & Temperature Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="ph" style={{ ...formStyles.label, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
                 <span>pH Level</span>
                 <span style={{
-                  width: '12px',
-                  height: '12px',
+                  width: '10px',
+                  height: '10px',
                   borderRadius: '50%',
                   display: 'inline-block',
                   backgroundColor: getPhColor(ph),
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  transition: 'background-color 0.25s ease'
+                  border: '1px solid rgba(0,0,0,0.15)',
+                  transition: 'background-color 0.2s ease'
                 }} />
               </label>
               <input 
@@ -122,12 +130,12 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
                 value={ph}
                 onChange={(e) => setPh(e.target.value)}
                 placeholder="e.g. 7.2"
+                style={formStyles.input}
               />
             </div>
 
-            {/* Temperature */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="temperature" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Temperature (°C)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="temperature" style={formStyles.label}>Temp (°C)</label>
               <input 
                 type="number" 
                 id="temperature" 
@@ -138,26 +146,24 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
                 value={temperature}
                 onChange={(e) => setTemperature(e.target.value)}
                 placeholder="e.g. 24.5"
+                style={formStyles.input}
               />
             </div>
-
           </div>
 
-          {/* Ammonia, Nitrite, Nitrate */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '1.25rem' }}>
-            
-            {/* Ammonia */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="ammonia" style={{ fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span>Ammonia (ppm)</span>
+          {/* Ammonia, Nitrite, Nitrate Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '0.75rem' }}>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="ammonia" style={{ ...formStyles.label, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <span>NH3 (ppm)</span>
                 <span style={{
-                  width: '12px',
-                  height: '12px',
+                  width: '9px',
+                  height: '9px',
                   borderRadius: '50%',
                   display: 'inline-block',
                   backgroundColor: getAmmoniaColor(ammonia),
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  transition: 'background-color 0.25s ease'
+                  border: '1px solid rgba(0,0,0,0.15)',
+                  transition: 'background-color 0.2s ease'
                 }} />
               </label>
               <input 
@@ -168,22 +174,22 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
                 min="0"
                 value={ammonia}
                 onChange={(e) => setAmmonia(e.target.value)}
-                placeholder="e.g. 0.0"
+                placeholder="0.0"
+                style={formStyles.input}
               />
             </div>
 
-            {/* Nitrite */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="nitrite" style={{ fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span>Nitrite (ppm)</span>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="nitrite" style={{ ...formStyles.label, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <span>NO2 (ppm)</span>
                 <span style={{
-                  width: '12px',
-                  height: '12px',
+                  width: '9px',
+                  height: '9px',
                   borderRadius: '50%',
                   display: 'inline-block',
                   backgroundColor: getNitriteColor(nitrite),
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  transition: 'background-color 0.25s ease'
+                  border: '1px solid rgba(0,0,0,0.15)',
+                  transition: 'background-color 0.2s ease'
                 }} />
               </label>
               <input 
@@ -194,22 +200,22 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
                 min="0"
                 value={nitrite}
                 onChange={(e) => setNitrite(e.target.value)}
-                placeholder="e.g. 0.0"
+                placeholder="0.0"
+                style={formStyles.input}
               />
             </div>
 
-            {/* Nitrate */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="nitrate" style={{ fontWeight: 600, fontSize: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                <span>Nitrate (ppm)</span>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="nitrate" style={{ ...formStyles.label, display: 'flex', alignItems: 'center', gap: '0.3rem' }}>
+                <span>NO3 (ppm)</span>
                 <span style={{
-                  width: '12px',
-                  height: '12px',
+                  width: '9px',
+                  height: '9px',
                   borderRadius: '50%',
                   display: 'inline-block',
                   backgroundColor: getNitrateColor(nitrate),
-                  border: '1px solid rgba(0,0,0,0.1)',
-                  transition: 'background-color 0.25s ease'
+                  border: '1px solid rgba(0,0,0,0.15)',
+                  transition: 'background-color 0.2s ease'
                 }} />
               </label>
               <input 
@@ -220,16 +226,16 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
                 min="0"
                 value={nitrate}
                 onChange={(e) => setNitrate(e.target.value)}
-                placeholder="e.g. 10"
+                placeholder="10"
+                style={formStyles.input}
               />
             </div>
-
           </div>
 
-          {/* Hardness: GH / KH */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="gh" style={{ fontWeight: 600, fontSize: '0.85rem' }}>General Hardness (GH - dGH)</label>
+          {/* Hardness dGH & dKH Grid */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="gh" style={formStyles.label}>GH (General dGH)</label>
               <input 
                 type="number" 
                 id="gh" 
@@ -239,11 +245,12 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
                 value={gh}
                 onChange={(e) => setGh(e.target.value)}
                 placeholder="e.g. 6.0"
+                style={formStyles.input}
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="kh" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Carbonate Hardness (KH - dKH)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="kh" style={formStyles.label}>KH (Carbonate dKH)</label>
               <input 
                 type="number" 
                 id="kh" 
@@ -253,37 +260,46 @@ export default function ChemistryForm({ tankId, tankName }: ChemistryFormProps) 
                 value={kh}
                 onChange={(e) => setKh(e.target.value)}
                 placeholder="e.g. 4.0"
+                style={formStyles.input}
               />
             </div>
           </div>
 
           {/* Measurement Timestamp */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="timestamp" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Date & Time of Measurement</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="timestamp" style={formStyles.label}>Date & Time of Measurement</label>
             <input 
               type="datetime-local" 
               id="timestamp" 
               name="timestamp" 
               defaultValue={new Date().toISOString().substring(0, 16)}
+              style={formStyles.input}
             />
           </div>
 
-          {/* Buttons */}
-          <div style={{ marginTop: '1rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-            <Link href={`/tanks/${tankId}`} className="btn">
-              Cancel
-            </Link>
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
             <button 
               type="submit" 
               disabled={isPending}
-              className="btn btn-primary"
-              style={{ opacity: isPending ? 0.7 : 1, cursor: isPending ? 'not-allowed' : 'pointer' }}
+              style={{
+                ...formStyles.submitBtn,
+                opacity: isPending ? 0.7 : 1,
+                cursor: isPending ? 'not-allowed' : 'pointer'
+              }}
             >
               {isPending ? 'Saving Logs...' : 'Save Chemistry'}
             </button>
+            <Link href={`/tanks/${tankId}`} style={{ textDecoration: 'none' }}>
+              <div style={formStyles.cancelBtn}>
+                Cancel
+              </div>
+            </Link>
           </div>
         </form>
       </div>
+
+      <FormBanner />
     </div>
   );
 }

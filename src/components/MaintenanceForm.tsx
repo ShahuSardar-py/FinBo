@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { addMaintenanceLog } from '@/app/actions/maintenanceActions';
+import { FormHeader, FormBanner, formStyles } from './FormStyles';
 
 interface MaintenanceFormProps {
   tankId: string;
@@ -16,18 +17,16 @@ const COMMON_ACTIVITIES = [
   'Substrate Vacuuming',
   'Plant Trimming/Pruning',
   'Equipment Calibration',
-  'Pest Control / Treatment',
   'Other'
 ];
 
 const NOTE_PRESETS = [
   'Performed a 25% water change.',
-  'Added liquid water conditioner (dechlorinator).',
-  'Scraped algae off front and side glass panes.',
-  'Pruned overgrown stem plants in the background.',
+  'Added liquid water conditioner.',
+  'Scraped algae off front glass.',
+  'Pruned overgrown stem plants.',
   'Cleaned pre-filter sponge blocks.',
-  'Calibrated heater thermostat settings.',
-  'Dosed micro & macro fertilizer supplements.',
+  'Dosed liquid fertilizer supplements.',
 ];
 
 export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormProps) {
@@ -60,23 +59,32 @@ export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormPro
   const isWaterChange = activityType === 'Water Change' || activityType.toLowerCase().includes('water change');
 
   return (
-    <div style={{ maxWidth: '650px', margin: '0 auto', width: '100%' }}>
-      <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <Link href={`/tanks/${tankId}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
-          ← Back to {tankName}
-        </Link>
-        <h1 className="heading-1" style={{ margin: 0 }}>Log Maintenance</h1>
-      </div>
+    <div style={formStyles.container}>
+      {/* Form Header */}
+      <FormHeader 
+        title="Log Maintenance" 
+        subtitle={`Record maintenance activities and water exchange volume for ${tankName}.`} 
+        backUrl={`/tanks/${tankId}`} 
+      />
 
-      <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {/* Thick Border Form Card */}
+      <div style={formStyles.card}>
         
         {/* Banner Info */}
-        <div style={{ display: 'flex', gap: '1.25rem', alignItems: 'center', background: '#f8fafc', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
-          <span style={{ fontSize: '2rem' }}>🔧</span>
+        <div style={{
+          display: 'flex',
+          gap: '1.25rem',
+          alignItems: 'center',
+          background: '#f8fafc',
+          padding: '1.25rem',
+          borderRadius: '20px',
+          border: '3.5px solid #0f172a'
+        }}>
+          <span style={{ fontSize: '1.8rem' }}>🔧</span>
           <div>
-            <h4 style={{ margin: 0, fontWeight: 600, color: 'var(--tertiary)' }}>Maintenance Ledger</h4>
-            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              Regular maintenance builds your ecosystem stability score. Log tasks to track water changes.
+            <h4 style={{ margin: 0, fontWeight: 800, color: '#0f172a', fontSize: '0.85rem' }}>Maintenance Ledger</h4>
+            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.725rem', color: 'var(--text-secondary)', lineHeight: 1.3 }}>
+              Logging tasks helps track parameter shifts. Dosing and water replacement increases stability.
             </p>
           </div>
         </div>
@@ -86,15 +94,15 @@ export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormPro
           <input type="hidden" name="tankId" value={tankId} />
 
           {/* Activity Type Selection */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="activityType" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Activity Type *</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="activityType" style={formStyles.label}>Activity Type *</label>
             <select 
               id="activityType" 
               name="activityType" 
               required
               value={activityType}
               onChange={(e) => setActivityType(e.target.value)}
-              style={{ background: 'white' }}
+              style={formStyles.input}
             >
               <option value="">-- Select Activity --</option>
               {COMMON_ACTIVITIES.map(act => (
@@ -103,28 +111,24 @@ export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormPro
             </select>
           </div>
 
-          {/* Water Change Slider - Displays when Water Change activity is chosen */}
+          {/* Water Change Slider */}
           <div style={{
-            opacity: isWaterChange ? 1 : 0.4,
+            opacity: isWaterChange ? 1 : 0.45,
             pointerEvents: isWaterChange ? 'auto' : 'none',
-            transition: 'var(--transition-smooth)',
-            background: isWaterChange ? 'var(--secondary)' : '#f8fafc',
-            border: isWaterChange ? '1px solid rgba(2, 132, 199, 0.25)' : '1px solid var(--border-color)',
+            transition: 'opacity 0.2s ease',
+            background: isWaterChange ? '#e0f7fa' : '#f8fafc',
+            border: '3.5px solid #0f172a',
             padding: '1.25rem',
-            borderRadius: 'var(--radius-sm)',
+            borderRadius: '20px',
             display: 'flex',
             flexDirection: 'column',
             gap: '0.75rem'
           }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontWeight: 700, fontSize: '0.85rem', color: isWaterChange ? 'var(--primary)' : 'var(--text-secondary)' }}>
-                Water Volume Replaced (%) {!isWaterChange && '(Choose "Water Change" to activate)'}
+              <span style={{ fontWeight: 800, fontSize: '0.75rem', color: '#0f172a' }}>
+                Water Volume Replaced {!isWaterChange && '(Choose "Water Change" to activate)'}
               </span>
-              <span style={{ 
-                fontSize: '1.25rem', 
-                fontWeight: 800, 
-                color: isWaterChange ? 'var(--primary)' : 'var(--text-secondary)'
-              }}>
+              <span style={{ fontSize: '1.25rem', fontWeight: 800, color: '#00838f' }}>
                 {waterChangePercent}%
               </span>
             </div>
@@ -141,21 +145,21 @@ export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormPro
               style={{
                 width: '100%',
                 cursor: isWaterChange ? 'pointer' : 'default',
-                accentColor: 'var(--primary)'
+                accentColor: '#0891b2'
               }}
             />
             
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: 'var(--text-secondary)', fontWeight: 600 }}>
-              <span>0% (None)</span>
-              <span>25% (Standard)</span>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', color: '#64748b', fontWeight: 700 }}>
+              <span>0%</span>
+              <span>25% (Std)</span>
               <span>50% (Heavy)</span>
-              <span>100% (Complete)</span>
+              <span>100%</span>
             </div>
           </div>
 
           {/* Notes description box */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="notes" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Detailed Notes / Log Description</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="notes" style={formStyles.label}>Detailed Notes / Log Description</label>
             <textarea 
               id="notes" 
               name="notes" 
@@ -163,11 +167,12 @@ export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormPro
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Describe what was performed in this session..."
+              style={formStyles.input}
             />
 
             {/* Note preset helpers */}
-            <div style={{ marginTop: '0.5rem' }}>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
+            <div style={{ marginTop: '0.35rem' }}>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.35rem', fontWeight: 800, letterSpacing: '0.05em' }}>
                 QUICK BUILD NOTES (TAP TO APPEND):
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -178,24 +183,17 @@ export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormPro
                     onClick={() => handleAppendNote(preset)}
                     style={{
                       background: '#ffffff',
-                      color: 'var(--text-secondary)',
-                      border: '1px solid var(--border-color)',
+                      color: '#64748b',
+                      border: '3px solid #0f172a',
                       padding: '0.3rem 0.6rem',
-                      borderRadius: 'var(--radius-sm)',
+                      borderRadius: '12px',
                       fontSize: '0.7rem',
                       cursor: 'pointer',
-                      transition: 'var(--transition-smooth)'
-                    }}
-                    onMouseEnter={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--text-secondary)';
-                      (e.currentTarget as HTMLButtonElement).style.background = '#f8fafc';
-                    }}
-                    onMouseLeave={(e) => {
-                      (e.currentTarget as HTMLButtonElement).style.borderColor = 'var(--border-color)';
-                      (e.currentTarget as HTMLButtonElement).style.background = '#ffffff';
+                      fontWeight: 700,
+                      transition: 'all 0.2s ease'
                     }}
                   >
-                    + {preset.substring(0, 35)}...
+                    + {preset.replace('Performed a ', '').replace('Added ', '')}
                   </button>
                 ))}
               </div>
@@ -203,32 +201,40 @@ export default function MaintenanceForm({ tankId, tankName }: MaintenanceFormPro
           </div>
 
           {/* DateTime field */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="timestamp" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Date & Time of Session</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="timestamp" style={formStyles.label}>Date & Time of Session</label>
             <input 
               type="datetime-local" 
               id="timestamp" 
               name="timestamp" 
               defaultValue={new Date().toISOString().substring(0, 16)}
+              style={formStyles.input}
             />
           </div>
 
           {/* Action buttons */}
-          <div style={{ marginTop: '1rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-            <Link href={`/tanks/${tankId}`} className="btn">
-              Cancel
-            </Link>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
             <button 
               type="submit" 
               disabled={isPending}
-              className="btn btn-primary"
-              style={{ opacity: isPending ? 0.7 : 1, cursor: isPending ? 'not-allowed' : 'pointer' }}
+              style={{
+                ...formStyles.submitBtn,
+                opacity: isPending ? 0.7 : 1,
+                cursor: isPending ? 'not-allowed' : 'pointer'
+              }}
             >
               {isPending ? 'Saving Ledger...' : 'Save Log'}
             </button>
+            <Link href={`/tanks/${tankId}`} style={{ textDecoration: 'none' }}>
+              <div style={formStyles.cancelBtn}>
+                Cancel
+              </div>
+            </Link>
           </div>
         </form>
       </div>
+
+      <FormBanner />
     </div>
   );
 }

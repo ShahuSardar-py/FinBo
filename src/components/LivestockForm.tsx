@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { addLivestock } from '@/app/actions/livestockActions';
+import { FormHeader, FormBanner, formStyles } from './FormStyles';
 
 interface LivestockFormProps {
   tankId: string;
@@ -10,15 +11,12 @@ interface LivestockFormProps {
 }
 
 const COMMON_SPECIES = [
-  { name: 'Neon Tetra', emoji: '🐟', description: 'Small schooling fish' },
-  { name: 'Clownfish', emoji: '🐠', description: 'Bright orange reef fish' },
-  { name: 'Blue Tang', emoji: '🐟', description: 'Vibrant blue surgeonfish' },
-  { name: 'Cherry Shrimp', emoji: '🦐', description: 'Red dwarf algae eater' },
-  { name: 'Amano Shrimp', emoji: '🦐', description: 'Hardy dwarf cleaner' },
-  { name: 'Otocinclus Catfish', emoji: '🐱', description: 'Dwarf algae sucker' },
-  { name: 'Betta Fish', emoji: '🐠', description: 'Beautiful long fins' },
-  { name: 'Guppy', emoji: '🐟', description: 'Colorful active livebearer' },
-  { name: 'Mystery Snail', emoji: '🐌', description: 'Peaceful scavenger' },
+  { name: 'Neon Tetra', emoji: '🐟' },
+  { name: 'Clownfish', emoji: '🐠' },
+  { name: 'Blue Tang', emoji: '🐟' },
+  { name: 'Cherry Shrimp', emoji: '🦐' },
+  { name: 'Amano Shrimp', emoji: '🦐' },
+  { name: 'Mystery Snail', emoji: '🐌' },
 ];
 
 export default function LivestockForm({ tankId, tankName }: LivestockFormProps) {
@@ -39,23 +37,32 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
   };
 
   return (
-    <div style={{ maxWidth: '650px', margin: '0 auto', width: '100%' }}>
-      <div style={{ marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-        <Link href={`/tanks/${tankId}`} style={{ color: 'var(--text-secondary)', textDecoration: 'none', fontWeight: 500 }}>
-          ← Back to {tankName}
-        </Link>
-        <h1 className="heading-1" style={{ margin: 0 }}>Add Livestock</h1>
-      </div>
+    <div style={formStyles.container}>
+      {/* Form Header */}
+      <FormHeader 
+        title="Add Livestock" 
+        subtitle={`Introduce new aquatic fauna specimens to ${tankName}.`} 
+        backUrl={`/tanks/${tankId}`} 
+      />
 
-      <div className="card" style={{ padding: '2rem', display: 'flex', flexDirection: 'column', gap: '2rem' }}>
+      {/* Thick Border Form Card */}
+      <div style={formStyles.card}>
         
         {/* Real-time Image Preview */}
-        <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center', background: '#f8fafc', padding: '1.25rem', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-color)' }}>
+        <div style={{
+          display: 'flex',
+          gap: '1.25rem',
+          alignItems: 'center',
+          background: '#f8fafc',
+          padding: '1.25rem',
+          borderRadius: '20px',
+          border: '3.5px solid #0f172a'
+        }}>
           <div style={{
-            width: '80px',
-            height: '80px',
-            borderRadius: 'var(--radius-sm)',
-            border: '1px dashed #cbd5e1',
+            width: '74px',
+            height: '74px',
+            borderRadius: '16px',
+            border: '3.5px solid #0f172a',
             background: '#ffffff',
             display: 'flex',
             alignItems: 'center',
@@ -74,13 +81,13 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
                 style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
               />
             ) : (
-              <span style={{ fontSize: '2rem' }}>🐟</span>
+              <span style={{ fontSize: '1.8rem' }}>🐟</span>
             )}
           </div>
           <div>
-            <h4 style={{ margin: 0, fontWeight: 600, color: 'var(--tertiary)' }}>Live Image Preview</h4>
-            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
-              Paste a web URL in the field below to see a real-time preview of your specimen.
+            <h4 style={{ margin: 0, fontWeight: 800, color: '#0f172a', fontSize: '0.85rem' }}>Live Image Preview</h4>
+            <p style={{ margin: '0.2rem 0 0 0', fontSize: '0.725rem', color: 'var(--text-secondary)', lineHeight: 1.3 }}>
+              Paste a web image URL below to verify the specimen preview.
             </p>
           </div>
         </div>
@@ -90,21 +97,22 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
           <input type="hidden" name="tankId" value={tankId} />
 
           {/* Image URL input */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="imageUrl" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Image URL (Optional)</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="imageUrl" style={formStyles.label}>Image URL (Optional)</label>
             <input 
               type="url" 
               id="imageUrl" 
               name="imageUrl" 
               value={imageUrl}
               onChange={(e) => setImageUrl(e.target.value)}
-              placeholder="e.g. https://images.unsplash.com/photo-..."
+              placeholder="https://images.unsplash.com/photo-..."
+              style={formStyles.input}
             />
           </div>
 
           {/* Species with Suggestions */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="species" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Species / Breed *</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="species" style={formStyles.label}>Species / Breed *</label>
             <input 
               type="text" 
               id="species" 
@@ -113,11 +121,12 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
               value={species}
               onChange={(e) => setSpecies(e.target.value)}
               placeholder="e.g. Neon Tetra"
+              style={formStyles.input}
             />
             
             {/* Suggestion Chips */}
-            <div style={{ marginTop: '0.5rem' }}>
-              <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.4rem', fontWeight: 600 }}>
+            <div style={{ marginTop: '0.35rem' }}>
+              <span style={{ fontSize: '0.65rem', color: 'var(--text-secondary)', display: 'block', marginBottom: '0.35rem', fontWeight: 800, letterSpacing: '0.05em' }}>
                 QUICK SELECT SPECIES:
               </span>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
@@ -127,18 +136,18 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
                     type="button"
                     onClick={() => setSpecies(spec.name)}
                     style={{
-                      background: species === spec.name ? 'var(--secondary)' : '#ffffff',
-                      color: species === spec.name ? 'var(--primary)' : 'var(--text-secondary)',
-                      border: species === spec.name ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                      padding: '0.35rem 0.65rem',
-                      borderRadius: 'var(--radius-full)',
-                      fontSize: '0.75rem',
+                      background: species === spec.name ? '#e0f7fa' : '#ffffff',
+                      color: species === spec.name ? '#00838f' : '#64748b',
+                      border: '3.5px solid #0f172a',
+                      padding: '0.35rem 0.75rem',
+                      borderRadius: '16px',
+                      fontSize: '0.725rem',
                       cursor: 'pointer',
-                      fontWeight: 500,
+                      fontWeight: 800,
                       display: 'flex',
                       alignItems: 'center',
                       gap: '0.25rem',
-                      transition: 'var(--transition-smooth)'
+                      transition: 'all 0.2s ease'
                     }}
                   >
                     <span>{spec.emoji}</span>
@@ -150,20 +159,21 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
           </div>
 
           {/* Nickname / Custom Name */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="name" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Nickname / Specimen Name (Optional)</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="name" style={formStyles.label}>Nickname / Specimen Name (Optional)</label>
             <input 
               type="text" 
               id="name" 
               name="name" 
               placeholder="e.g. Neon School, Bluey"
+              style={formStyles.input}
             />
           </div>
 
           {/* Qty & Size Class */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="quantity" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Quantity *</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="quantity" style={formStyles.label}>Quantity *</label>
               <input 
                 type="number" 
                 id="quantity" 
@@ -171,36 +181,38 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
                 required 
                 min="1"
                 defaultValue="1"
+                style={formStyles.input}
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="size" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Size Class (Optional)</label>
-              <select id="size" name="size" defaultValue="">
-                <option value="">Select standard size...</option>
-                <option value="Juvenile (< 0.5 inch)">Juvenile (&lt; 0.5 inch)</option>
-                <option value="Small (0.5 - 1 inch)">Small (0.5 - 1 inch)</option>
-                <option value="Medium (1 - 2 inches)">Medium (1 - 2 inches)</option>
-                <option value="Large (2 - 4 inches)">Large (2 - 4 inches)</option>
-                <option value="Specimen (> 4 inches)">Specimen (&gt; 4 inches)</option>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="size" style={formStyles.label}>Size Class (Optional)</label>
+              <select id="size" name="size" defaultValue="" style={formStyles.input}>
+                <option value="">Select size...</option>
+                <option value="Juvenile (< 0.5 inch)">Juvenile (&lt; 0.5")</option>
+                <option value="Small (0.5 - 1 inch)">Small (0.5 - 1")</option>
+                <option value="Medium (1 - 2 inches)">Medium (1 - 2")</option>
+                <option value="Large (2 - 4 inches)">Large (2 - 4")</option>
+                <option value="Specimen (> 4 inches)">Specimen (&gt; 4")</option>
               </select>
             </div>
           </div>
 
           {/* Source Vendor & Purchase Price */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.25rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="boughtFrom" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Vendor Store (Optional)</label>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="boughtFrom" style={formStyles.label}>Vendor Store (Optional)</label>
               <input 
                 type="text" 
                 id="boughtFrom" 
                 name="boughtFrom" 
-                placeholder="e.g. Local Fish Store, Aquarists UK"
+                placeholder="e.g. Local Fish Store"
+                style={formStyles.input}
               />
             </div>
 
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="price" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Price Paid (Optional)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="price" style={formStyles.label}>Price Paid (Optional)</label>
               <input 
                 type="number" 
                 id="price" 
@@ -208,38 +220,47 @@ export default function LivestockForm({ tankId, tankName }: LivestockFormProps) 
                 step="0.01"
                 min="0"
                 placeholder="e.g. 9.99"
+                style={formStyles.input}
               />
             </div>
           </div>
 
           {/* Date Logged */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="addedDate" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Acquisition Date *</label>
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="addedDate" style={formStyles.label}>Acquisition Date *</label>
             <input 
               type="date" 
               id="addedDate" 
               name="addedDate" 
               required
               defaultValue={new Date().toISOString().split('T')[0]}
+              style={formStyles.input}
             />
           </div>
 
           {/* Action buttons */}
-          <div style={{ marginTop: '1rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-            <Link href={`/tanks/${tankId}`} className="btn">
-              Cancel
-            </Link>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
             <button 
               type="submit" 
               disabled={isPending}
-              className="btn btn-primary"
-              style={{ opacity: isPending ? 0.7 : 1, cursor: isPending ? 'not-allowed' : 'pointer' }}
+              style={{
+                ...formStyles.submitBtn,
+                opacity: isPending ? 0.7 : 1,
+                cursor: isPending ? 'not-allowed' : 'pointer'
+              }}
             >
               {isPending ? 'Logging Specimen...' : 'Save Livestock'}
             </button>
+            <Link href={`/tanks/${tankId}`} style={{ textDecoration: 'none' }}>
+              <div style={formStyles.cancelBtn}>
+                Cancel
+              </div>
+            </Link>
           </div>
         </form>
       </div>
+
+      <FormBanner />
     </div>
   );
 }

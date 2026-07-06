@@ -1,6 +1,14 @@
 import { db } from '@/lib/db';
 import Link from 'next/link';
 
+const DAILY_QUOTES = [
+  { text: "Oscar Cichlids are highly intelligent fish, known to recognize their owners and even 'wag' their tails to beg for food.", author: "Finbo Fact" },
+  { text: "Aquascaping is the art of arranging aquatic plants, rocks, and driftwood in an aesthetically pleasing manner under water.", author: "Takashi Amano" },
+  { text: "Decaying organic leaf litter in blackwater Amazonian streams tints the water like tea, which is natural habitat for Neon Tetras.", author: "Finbo Fact" },
+  { text: "An aquarium is a living canvas where you are both the artist who paints it and the curator who protects its life.", author: "Nature Aquarium" },
+  { text: "Scientific studies show that watching aquarium fish significantly reduces daily anxiety, stress levels, and blood pressure.", author: "Ecosystem Health" },
+];
+
 export default async function Home() {
   const tanks = await db.prepare('SELECT * FROM Tank ORDER BY setupDate DESC').all() as any[];
 
@@ -29,6 +37,8 @@ export default async function Home() {
   const avgHealth = tanks.length > 0 ? Math.round(tanks.reduce((sum, tank) => sum + tank.healthScore, 0) / tanks.length) : 100;
   const activeAlertsCount = tanks.filter(t => t.hasTempAlert || t.hasPhAlert).length;
 
+  const quote = DAILY_QUOTES[new Date().getDate() % DAILY_QUOTES.length];
+
   return (
     <div style={{
       maxWidth: '540px',
@@ -36,7 +46,7 @@ export default async function Home() {
       display: 'flex',
       flexDirection: 'column',
       gap: '1.5rem',
-      padding: '1rem 0 5rem 0' // extra bottom spacing for floating nav
+      padding: '1rem 0 6rem 0'
     }}>
       
       {/* Top Header Row */}
@@ -57,7 +67,7 @@ export default async function Home() {
           }}>
             👩‍🎨
           </div>
-          <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--tertiary)' }}>AuraAquatics</span>
+          <span style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--tertiary)' }}>Finbo</span>
         </div>
         
         <Link href="/notifications" style={{ textDecoration: 'none' }}>
@@ -142,6 +152,40 @@ export default async function Home() {
           <svg width="80" height="98" viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M12 2.5C12 2.5 4 11.5 4 16.5C4 20.9183 7.58172 24.5 12 24.5C16.4183 24.5 20 20.9183 20 16.5C20 11.5 12 2.5 12 2.5Z" stroke="#ffffff" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
+        </div>
+      </div>
+
+      {/* Daily Aquarist Wisdom Card */}
+      <div style={{
+        background: '#ffffff',
+        border: '1.5px solid rgba(15, 23, 42, 0.06)',
+        borderRadius: '30px',
+        padding: '1.25rem 1.5rem',
+        display: 'flex',
+        gap: '1rem',
+        alignItems: 'center',
+        boxShadow: '0 8px 24px rgba(15, 23, 42, 0.01)'
+      }}>
+        <div style={{
+          width: '42px',
+          height: '42px',
+          borderRadius: '50%',
+          background: '#fef9c3',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '1.2rem',
+          flexShrink: 0
+        }}>
+          💡
+        </div>
+        <div>
+          <span style={{ fontSize: '0.6rem', fontWeight: 800, color: '#854d0e', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block' }}>
+            {quote.author}
+          </span>
+          <p style={{ fontSize: '0.8rem', color: '#475569', margin: '0.15rem 0 0 0', lineHeight: 1.4, fontWeight: 600 }}>
+            {quote.text}
+          </p>
         </div>
       </div>
 

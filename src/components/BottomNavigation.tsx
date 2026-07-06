@@ -9,7 +9,7 @@ export default function BottomNavigation() {
 
   const isActive = (path: string) => {
     if (path === '/') {
-      return pathname === '/' || pathname === '/habitats';
+      return pathname === '/' || pathname === '/habitats' || pathname.startsWith('/tanks');
     }
     return pathname.startsWith(path);
   };
@@ -30,16 +30,15 @@ export default function BottomNavigation() {
       width: '90%',
       maxWidth: '420px',
       height: '64px',
-      background: 'rgba(255, 255, 255, 0.95)',
-      backdropFilter: 'blur(12px)',
+      background: '#272a30',
       borderRadius: '32px',
       display: 'flex',
       justifyContent: 'space-around',
       alignItems: 'center',
       padding: '0 8px',
       zIndex: 999,
-      boxShadow: '0 10px 30px rgba(15, 23, 42, 0.08)',
-      border: '1px solid rgba(15, 23, 42, 0.05)'
+      boxShadow: '0 12px 32px rgba(15, 23, 42, 0.25)',
+      border: '1px solid rgba(255, 255, 255, 0.05)'
     }}>
       {navItems.map((item) => {
         const active = isActive(item.path);
@@ -58,13 +57,13 @@ export default function BottomNavigation() {
               width: '46px',
               height: '46px',
               borderRadius: '50%',
-              background: active ? 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)' : 'transparent',
-              color: active ? '#ffffff' : '#94a3b8',
+              background: active ? '#005b60' : 'transparent',
+              color: active ? '#00f2fe' : '#7b8794',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: active ? '1.35rem' : '1.35rem',
-              boxShadow: active ? '0 6px 16px rgba(6, 182, 212, 0.25)' : 'none',
+              fontSize: '1.3rem',
+              boxShadow: active ? '0 4px 12px rgba(0, 91, 96, 0.2)' : 'none',
               transform: active ? 'scale(1.05)' : 'scale(1)',
               transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
             }}>

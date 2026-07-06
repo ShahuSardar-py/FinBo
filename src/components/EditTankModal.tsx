@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { updateTank } from '@/app/actions/tankActions';
+import { formStyles } from './FormStyles';
 
 interface Tank {
   id: string;
@@ -42,7 +43,7 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
       left: 0,
       width: '100vw',
       height: '100vh',
-      backgroundColor: 'rgba(15, 23, 42, 0.5)',
+      backgroundColor: 'rgba(15, 23, 42, 0.4)',
       backdropFilter: 'blur(8px)',
       display: 'flex',
       alignItems: 'center',
@@ -51,13 +52,17 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
       padding: '1.5rem',
       boxSizing: 'border-box'
     }}>
-      <div className="card" style={{
+      <div style={{
+        ...formStyles.card,
         width: '100%',
-        maxWidth: '600px',
+        maxWidth: '460px',
         maxHeight: '90vh',
         overflowY: 'auto',
         position: 'relative',
-        background: '#ffffff',
+        background: '#f8fafc',
+        borderRadius: '30px',
+        padding: '2rem 1.75rem',
+        boxShadow: '0 20px 40px rgba(15, 23, 42, 0.15)',
         animation: 'modalSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
       }}>
         
@@ -67,10 +72,60 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
             from { transform: translateY(20px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
           }
+          .option-radio {
+            display: none !important;
+          }
+          .option-label {
+            flex: 1;
+            border: 1.5px solid rgba(15, 23, 42, 0.08);
+            border-radius: 20px;
+            padding: 1rem 0.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-weight: 800;
+            font-size: 0.7rem;
+            cursor: pointer;
+            color: #64748b;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            box-sizing: border-box;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+          }
+          .option-radio:checked + .option-label {
+            border-color: #00f2fe !important;
+            color: #00838f !important;
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.12) !important;
+          }
+
+          .planting-radio {
+            display: none !important;
+          }
+          .planting-label {
+            flex: 1;
+            border: 1.5px solid rgba(15, 23, 42, 0.08);
+            border-radius: 28px;
+            padding: 0.8rem 1rem;
+            cursor: pointer;
+            color: #0f172a;
+            background: #ffffff;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
+            box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
+          }
+          .planting-radio:checked + .planting-label {
+            border-color: #00f2fe !important;
+            color: #00838f !important;
+            box-shadow: 0 6px 20px rgba(6, 182, 212, 0.1) !important;
+          }
         `}} />
 
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', borderBottom: '1px solid var(--border-color)', paddingBottom: '1rem' }}>
-          <h2 className="heading-2">Edit Tank Configuration</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid rgba(15, 23, 42, 0.08)', paddingBottom: '0.75rem', marginBottom: '0.5rem' }}>
+          <h2 style={{ fontSize: '1.25rem', fontWeight: 800, color: '#0f172a', margin: 0, letterSpacing: '-0.02em' }}>Edit Configuration</h2>
           <button 
             type="button" 
             onClick={onClose}
@@ -79,8 +134,9 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
               border: 'none',
               fontSize: '1.5rem',
               cursor: 'pointer',
-              color: 'var(--text-secondary)',
-              padding: '0.25rem'
+              color: '#0f172a',
+              padding: '0.25rem',
+              fontWeight: 850
             }}
           >
             &times;
@@ -90,21 +146,24 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
           <input type="hidden" name="id" value={tank.id} />
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="name" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Tank Name</label>
+          {/* Tank Name */}
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="name" style={formStyles.label}>Tank Name</label>
             <input 
               type="text" 
               id="name" 
               name="name" 
               required 
               defaultValue={tank.name}
-              placeholder="e.g. Zen Garden"
+              placeholder="e.g., Midnight Reef"
+              style={formStyles.input}
             />
           </div>
 
+          {/* Volume & Image URL Grid */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="volume" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Volume (Liters)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="volume" style={formStyles.label}>Volume (L)</label>
               <input 
                 type="number" 
                 id="volume" 
@@ -113,24 +172,26 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
                 min="1"
                 step="0.1"
                 defaultValue={tank.volume}
-                placeholder="e.g. 150"
+                style={formStyles.input}
               />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="imageUrl" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Image URL (Optional)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="imageUrl" style={formStyles.label}>Image URL</label>
               <input 
                 type="url" 
                 id="imageUrl" 
                 name="imageUrl" 
                 defaultValue={tank.imageUrl || ''}
-                placeholder="https://images.unsplash.com/..."
+                placeholder="Paste URL"
+                style={formStyles.input}
               />
             </div>
           </div>
 
+          {/* Target Temp & pH */}
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="targetTemp" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Target Temp (°C)</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="targetTemp" style={formStyles.label}>Target Temp (°C)</label>
               <input 
                 type="number" 
                 id="targetTemp" 
@@ -138,12 +199,12 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
                 step="0.1"
                 min="0"
                 max="40"
-                defaultValue={tank.targetTemp !== null ? tank.targetTemp : 24.0}
-                placeholder="e.g. 24.5"
+                defaultValue={tank.targetTemp !== null ? tank.targetTemp : 25}
+                style={formStyles.input}
               />
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label htmlFor="targetPh" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Target pH Level</label>
+            <div style={formStyles.fieldGroup}>
+              <label htmlFor="targetPh" style={formStyles.label}>Target pH</label>
               <input 
                 type="number" 
                 id="targetPh" 
@@ -152,58 +213,96 @@ export default function EditTankModal({ tank, isOpen, onClose }: EditTankModalPr
                 min="0"
                 max="14"
                 defaultValue={tank.targetPh !== null ? tank.targetPh : 7.0}
-                placeholder="e.g. 6.8"
+                style={formStyles.input}
               />
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-            <label htmlFor="equipment" style={{ fontWeight: 600, fontSize: '0.85rem' }}>Equipment Specs</label>
+          {/* Substrate Type Selection (5 Hobbyist Options) */}
+          <div style={formStyles.fieldGroup}>
+            <span style={formStyles.label}>Substrate Type</span>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.65rem', marginTop: '0.2rem' }}>
+              <input type="radio" id="edit_substrate_sand" name="hasGravel" value="no" defaultChecked={tank.hasGravel !== 1} className="option-radio" />
+              <label htmlFor="edit_substrate_sand" className="option-label" style={{ width: 'calc(50% - 0.375rem)', flex: 'none', padding: '0.8rem 0.5rem', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>🫧</span>
+                  <span>White Sand</span>
+                </div>
+              </label>
+
+              <input type="radio" id="edit_substrate_soil" name="hasGravel" value="yes" defaultChecked={tank.hasGravel === 1} className="option-radio" />
+              <label htmlFor="edit_substrate_soil" className="option-label" style={{ width: 'calc(50% - 0.375rem)', flex: 'none', padding: '0.8rem 0.5rem', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>🪨</span>
+                  <span>Aqua Soil</span>
+                </div>
+              </label>
+
+              <input type="radio" id="edit_substrate_gravel" name="hasGravel" value="yes" className="option-radio" />
+              <label htmlFor="edit_substrate_gravel" className="option-label" style={{ width: 'calc(50% - 0.375rem)', flex: 'none', padding: '0.8rem 0.5rem', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>🏔️</span>
+                  <span>River Gravel</span>
+                </div>
+              </label>
+
+              <input type="radio" id="edit_substrate_coral" name="hasGravel" value="no" className="option-radio" />
+              <label htmlFor="edit_substrate_coral" className="option-label" style={{ width: 'calc(50% - 0.375rem)', flex: 'none', padding: '0.8rem 0.5rem', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>🐚</span>
+                  <span>Crushed Coral</span>
+                </div>
+              </label>
+
+              <input type="radio" id="edit_substrate_bare" name="hasGravel" value="no" className="option-radio" />
+              <label htmlFor="edit_substrate_bare" className="option-label" style={{ width: '100%', flex: 'none', padding: '0.8rem 0.5rem', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                  <span>✨</span>
+                  <span>Bare Bottom</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Planting Setup (Planted, Non-Planted) */}
+          <div style={formStyles.fieldGroup}>
+            <span style={formStyles.label}>Planting Setup</span>
+            <div style={{ display: 'flex', gap: '0.75rem', marginTop: '0.2rem' }}>
+              <input type="radio" id="edit_planting_yes" name="isPlanted" value="yes" defaultChecked={tank.isPlanted === 1} className="planting-radio" />
+              <label htmlFor="edit_planting_yes" className="planting-label" style={{ padding: '0.6rem 0.75rem', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
+                  <span>🌿 Planted Tank</span>
+                </div>
+              </label>
+
+              <input type="radio" id="edit_planting_no" name="isPlanted" value="no" defaultChecked={tank.isPlanted !== 1} className="planting-radio" />
+              <label htmlFor="edit_planting_no" className="planting-label" style={{ padding: '0.6rem 0.75rem', borderRadius: '20px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', justifyContent: 'center' }}>
+                  <span>🐠 Non-Planted</span>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          {/* Equipment Specs */}
+          <div style={formStyles.fieldGroup}>
+            <label htmlFor="equipment" style={formStyles.label}>Equipment specs</label>
             <textarea 
               id="equipment" 
               name="equipment" 
               rows={3}
               defaultValue={tank.equipment || ''}
-              placeholder="Canister filters, LED lights, heaters, etc."
+              style={{ ...formStyles.input, borderRadius: '20px', resize: 'vertical' }}
             />
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', background: '#f8fafc', padding: '1rem', borderRadius: 'var(--radius-sm)' }}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>Substrate</span>
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.2rem' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', fontSize: '0.85rem' }}>
-                  <input type="radio" name="hasGravel" value="yes" defaultChecked={tank.hasGravel === 1} />
-                  Gravel/Sand
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', fontSize: '0.85rem' }}>
-                  <input type="radio" name="hasGravel" value="no" defaultChecked={tank.hasGravel !== 1} />
-                  Bare Bottom
-                </label>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <span style={{ fontWeight: 600, fontSize: '0.85rem' }}>Planting</span>
-              <div style={{ display: 'flex', gap: '1rem', marginTop: '0.2rem' }}>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', fontSize: '0.85rem' }}>
-                  <input type="radio" name="isPlanted" value="yes" defaultChecked={tank.isPlanted === 1} />
-                  Planted
-                </label>
-                <label style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', cursor: 'pointer', fontSize: '0.85rem' }}>
-                  <input type="radio" name="isPlanted" value="no" defaultChecked={tank.isPlanted !== 1} />
-                  Unplanted
-                </label>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ marginTop: '1rem', paddingTop: '1.25rem', borderTop: '1px solid var(--border-color)', display: 'flex', justifyContent: 'flex-end', gap: '0.75rem' }}>
-            <button type="button" onClick={onClose} className="btn">
-              Cancel
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem', marginTop: '1rem' }}>
+            <button type="submit" style={formStyles.submitBtn}>
+              💾 Save Changes
             </button>
-            <button type="submit" className="btn btn-primary">
-              Save Changes
+            <button type="button" onClick={onClose} style={formStyles.cancelBtn}>
+              Cancel
             </button>
           </div>
         </form>
